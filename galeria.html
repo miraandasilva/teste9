@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>GeoPortal - Galeria</title>
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<nav class="navbar navbar-expand-md navbar-dark gp-navbar sticky-top">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="index.html"><i class="bi bi-droplet-half me-2"></i>GeoPortal</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Abrir menu"><span class="navbar-toggler-icon"></span></button>
+			<div class="collapse navbar-collapse" id="menu">
+				<ul class="navbar-nav ms-auto gap-1">
+					<li class="nav-item"><a class="nav-link" href="index.html"><i class="bi bi-map me-1"></i>Mapa</a></li>
+					<li class="nav-item"><a class="nav-link active" aria-current="page" href="galeria.html"><i class="bi bi-images me-1"></i>Galeria</a></li>
+					<li class="nav-item"><a class="nav-link" href="downloads.html"><i class="bi bi-download me-1"></i>Downloads</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<header class="gp-page-head">
+		<div class="container">
+			<h1>Galeria de mapas</h1>
+			<p>Mapas temáticos dos recursos hídricos e do território da Paraíba. Clique na imagem para ampliar ou abrir o PDF.</p>
+		</div>
+	</header>
+
+	<main class="container py-4">
+		<div class="row g-4" id="galeria"></div>
+	</main>
+
+	<footer class="container gp-footer">GeoPortal · Recursos hídricos da Paraíba</footer>
+
+	<!-- Visualizador de imagem -->
+	<div class="modal fade" id="lightbox" tabindex="-1" aria-labelledby="lbTitulo" aria-hidden="true">
+		<div class="modal-dialog modal-xl modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title h6" id="lbTitulo"></h2>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+				</div>
+				<div class="modal-body text-center p-2"><img id="lbImg" class="img-fluid" alt=""></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script>
+		var mapas = [
+			{ t: "Açudes monitorados para qualidade da água", f: "AESA, 2009", img: "img/acudes_monitorados.png" },
+			{ t: "Infraestrutura hídrica e área de influência das adutoras", f: "AESA / SECTMA, 2007", img: "img/area_adutoras.jpg" },
+			{ t: "Áreas de atuação das Gerências Regionais de Bacias", f: "AESA, 2009", img: "img/areas_atuacao.png" },
+			{ t: "Áreas de atuação dos Comitês de Bacias Hidrográficas", f: "AESA, 2009", img: "img/areas_comites.png" },
+			{ t: "Bacias hidrográficas", f: "AESA, 2009", img: "img/bacias_hidrograficas.png" },
+			{ t: "Classe de capacidade de uso das terras", f: "ATECEL, 2002 / AESA", img: "img/classe_capacidade_uso_terras.jpg", pdf: "pdf/Classe_de_Capacidade_de_Uso_das_Terras.pdf" },
+			{ t: "Classe de terras para irrigação", f: "Atlas do Plano Estadual de Recursos Hídricos", img: "img/classe_terras_irrigacao.jpg", pdf: "pdf/Classe_de_Terras_para_Irrigacao.pdf" },
+			{ t: "Geomorfologia do Estado da Paraíba", f: "Atlas do Plano Estadual de Recursos Hídricos", img: "img/geomorfologia_paraiba.jpg", pdf: "pdf/Geomorfologia_do_Estado_da_Paraiba.pdf" },
+			{ t: "Geologia do Estado da Paraíba", f: "Atlas do Plano Estadual de Recursos Hídricos", img: "img/geologia_paraiba.jpg", pdf: "pdf/Geologia_do_Estado_da_Paraiba.pdf" }
+		];
+		var lb = new bootstrap.Modal('#lightbox');
+		document.getElementById('galeria').innerHTML = mapas.map(function (m, i) {
+			var acao = m.pdf
+				? '<a class="btn btn-sm btn-outline-primary" href="' + m.pdf + '" target="_blank" rel="noopener"><i class="bi bi-file-earmark-pdf me-1"></i>Abrir PDF</a>'
+				: '<button class="btn btn-sm btn-outline-primary" data-i="' + i + '"><i class="bi bi-arrows-fullscreen me-1"></i>Ampliar</button>';
+			return '<div class="col-12 col-sm-6 col-lg-4"><article class="gp-card d-flex flex-column">' +
+				'<img src="' + m.img + '" alt="' + m.t + '" loading="lazy" data-i="' + i + '">' +
+				'<div class="p-3 d-flex flex-column flex-grow-1"><h2 class="h6">' + m.t + '</h2>' +
+				'<p class="fonte mb-3">Fonte: ' + m.f + '</p><div class="mt-auto">' + acao + '</div></div></article></div>';
+		}).join('');
+		document.getElementById('galeria').addEventListener('click', function (e) {
+			var el = e.target.closest('[data-i]'); if (!el) return;
+			var m = mapas[el.dataset.i];
+			if (m.pdf) { window.open(m.pdf, '_blank'); return; }
+			document.getElementById('lbImg').src = m.img;
+			document.getElementById('lbImg').alt = m.t;
+			document.getElementById('lbTitulo').textContent = m.t;
+			lb.show();
+		});
+	</script>
+</body>
+</html>

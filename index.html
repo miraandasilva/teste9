@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>GeoPortal - Início</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body class="map-page">
+
+	<nav class="navbar navbar-expand-md navbar-dark gp-navbar sticky-top" style="height:56px">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="index.html"><i class="bi bi-droplet-half me-2"></i>GeoPortal</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu" aria-controls="menu" aria-expanded="false" aria-label="Abrir menu">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="menu">
+				<ul class="navbar-nav ms-auto gap-1">
+					<li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html"><i class="bi bi-map me-1"></i>Mapa</a></li>
+					<li class="nav-item"><a class="nav-link" href="galeria.html"><i class="bi bi-images me-1"></i>Galeria</a></li>
+					<li class="nav-item"><a class="nav-link" href="downloads.html"><i class="bi bi-download me-1"></i>Downloads</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="map" role="application" aria-label="Mapa de recursos hídricos da Paraíba"></div>
+
+	<!-- Painel de camadas e legenda -->
+	<div class="offcanvas offcanvas-start gp-panel" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="painel" aria-labelledby="painelTitulo">
+		<div class="offcanvas-header">
+			<h2 class="offcanvas-title h5 mb-0" id="painelTitulo">Camadas do mapa</h2>
+			<button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Fechar painel"></button>
+		</div>
+		<div class="offcanvas-body">
+			<p class="small text-secondary mb-2">Ative ou desative as informações. Clique em um elemento do mapa para ver os detalhes.</p>
+
+			<div class="gp-section-title">Dados</div>
+			<div class="gp-layer">
+				<label><span class="gp-swatch" style="border-color:#0057B8;background:#00A6FB"></span>
+					<span>Açudes <span class="badge text-bg-light" id="n-acudes"></span></span></label>
+				<div class="form-check form-switch m-0"><input class="form-check-input camada" type="checkbox" role="switch" id="sw-acudes" data-camada="acudes" aria-label="Açudes"></div>
+			</div>
+			<div class="gp-layer">
+				<label><span class="gp-swatch dot" style="border-color:#1e3a8a;background:#3b82f6"></span>
+					<span>Poços <span class="badge text-bg-light" id="n-pocos"></span></span></label>
+				<div class="form-check form-switch m-0"><input class="form-check-input camada" type="checkbox" role="switch" id="sw-pocos" data-camada="pocos" aria-label="Poços"></div>
+			</div>
+			<div class="gp-layer">
+				<label><span class="gp-swatch" style="border-color:#FF5733;background:rgba(255,87,51,.4)"></span>
+					<span>Bacias hidrográficas</span></label>
+				<div class="form-check form-switch m-0"><input class="form-check-input camada" type="checkbox" role="switch" id="sw-bacias" data-camada="bacias" aria-label="Bacias hidrográficas"></div>
+			</div>
+			<div class="gp-layer">
+				<label><span class="gp-swatch line" style="border-color:#070A9c"></span>
+					<span>Drenagem principal</span></label>
+				<div class="form-check form-switch m-0"><input class="form-check-input camada" type="checkbox" role="switch" id="sw-rios" data-camada="rios" aria-label="Drenagem principal"></div>
+			</div>
+
+			<div class="gp-section-title">Mapa base</div>
+			<div class="btn-group w-100" role="group" aria-label="Mapa base">
+				<input type="radio" class="btn-check" name="base" id="base-osm" value="osm" checked>
+				<label class="btn btn-outline-primary btn-sm" for="base-osm">Ruas</label>
+				<input type="radio" class="btn-check" name="base" id="base-sat" value="sat">
+				<label class="btn btn-outline-primary btn-sm" for="base-sat">Satélite</label>
+			</div>
+
+			<div class="gp-section-title">Legenda das bacias</div>
+			<p class="small text-secondary">Cada bacia hidrográfica tem uma cor própria no mapa. Clique na área para ver o nome, o perímetro e a área.</p>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+	<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+	<script src="dados/acudes.js"></script>
+	<script src="dados/bacias_hidro.js"></script>
+	<script src="dados/drenagem_principal.js"></script>
+	<script src="dados/pocos_pb.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
